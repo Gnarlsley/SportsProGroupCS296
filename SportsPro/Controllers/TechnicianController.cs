@@ -4,31 +4,37 @@ using SportsPro.Models;
 
 namespace SportsPro.Controllers
 {
-    public class ProductController : Controller
+    public class TechnicianController : Controller
     {
         private readonly SportsProContext _context;
-        // GET: ProductController
-        
-        public ProductController(SportsProContext context)
+
+        public TechnicianController(SportsProContext context)
         {
             _context = context;
         }
-        public IActionResult List()
+        // GET: TechnicianController
+        public ActionResult List()
         {
-            var productsList = _context.Products;
-            return View(productsList);
+            var TechnicianList = _context.Technicians;
+            return View(TechnicianList);
         }
 
-        // GET: ProductController/Create
-        public ActionResult Add()
+        // GET: TechnicianController/Details/5
+        public ActionResult Details(int id)
         {
             return View();
         }
 
-        // POST: ProductController/Create
+        // GET: TechnicianController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: TechnicianController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(IFormCollection collection)
+        public ActionResult Create(IFormCollection collection)
         {
             try
             {
@@ -40,13 +46,13 @@ namespace SportsPro.Controllers
             }
         }
 
-        // GET: ProductController/Edit/5
+        // GET: TechnicianController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: ProductController/Edit/5
+        // POST: TechnicianController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -61,13 +67,13 @@ namespace SportsPro.Controllers
             }
         }
 
-        // GET: ProductController/Delete/5
+        // GET: TechnicianController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: ProductController/Delete/5
+        // POST: TechnicianController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
