@@ -15,8 +15,8 @@ namespace SportsPro.Controllers
         // GET: TechnicianController
         public ActionResult List()
         {
-            var TechnicianList = _context.Technicians;
-            return View(TechnicianList);
+            var technicianList = _context.Technicians.ToList();
+            return View(technicianList);
         }
 
         // GET: TechnicianController/Details/5
@@ -49,17 +49,43 @@ namespace SportsPro.Controllers
         // GET: TechnicianController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var technician = _context.Technicians.Find(id);
+            if (technician == null)
+            {
+                return View();
+            }
+            else
+            {
+                return View(technician);
+            }
         }
 
         // POST: TechnicianController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Technician updatedTechnician)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid)
+                {
+                    return View(updatedTechnician);
+                }
+
+                var technician = _context.Technicians.Find(id);
+
+                if (technician == null)
+                {
+                    return View();
+                }
+
+                technician.Name = updatedTechnician.Name;
+                technician.Email = updatedTechnician.Email;
+                technician.Phone = updatedTechnician.Phone;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(List));
             }
             catch
             {

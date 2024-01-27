@@ -15,7 +15,7 @@ namespace SportsPro.Controllers
         }
         public IActionResult List()
         {
-            var productsList = _context.Products;
+            var productsList = _context.Products.ToList();
             return View(productsList);
         }
 
@@ -32,7 +32,7 @@ namespace SportsPro.Controllers
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(List));
             }
             catch
             {
@@ -43,17 +43,43 @@ namespace SportsPro.Controllers
         // GET: ProductController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var product = _context.Products.Find(id);
+            if (product == null)
+            {
+                return View();
+            }
+            else
+            {
+                return View(product);
+            }
         }
 
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, Product updatedProduct)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (!ModelState.IsValid)
+                {
+                    return View(updatedProduct);
+                }
+
+                var product = _context.Products.Find(id);
+
+                if (product == null)
+                {
+                    return View();
+                }
+
+                product.Name = updatedProduct.Name;
+                product.YearlyPrice = updatedProduct.YearlyPrice;
+                product.ReleaseDate = updatedProduct.ReleaseDate;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(List));
             }
             catch
             {
