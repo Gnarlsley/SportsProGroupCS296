@@ -62,24 +62,30 @@ namespace SportsPro.Controllers
         }
 
         // GET: ProductController/Delete/5
+        [HttpGet]
         public ActionResult Delete(int id)
         {
-            return View();
+            var obj = _context.Products.Find(id);
+            return View(obj);
         }
 
         // POST: ProductController/Delete/5
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
+            var obj = _context.Products.Find(id);
+
+            if (obj == null)
             {
-                return RedirectToAction(nameof(Index));
+                return NotFound();
             }
-            catch
-            {
-                return View();
-            }
+
+           _context.Products.Remove(obj);
+            
+            _context.SaveChanges();
+
+            return RedirectToAction("List");
         }
     }
 }
