@@ -19,12 +19,6 @@ namespace SportsPro.Controllers
             return View(technicianList);
         }
 
-        // GET: TechnicianController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
         // GET: TechnicianController/Create
         public ActionResult Create()
         {
@@ -92,7 +86,7 @@ namespace SportsPro.Controllers
                 return View();
             }
         }
-        // GET: ProductController/Delete/5
+
         [HttpGet]
         public ActionResult Delete(int id)
         {
@@ -100,7 +94,7 @@ namespace SportsPro.Controllers
             return View(deleteTech);
         }
 
-        // POST: ProductController/Delete/5
+
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

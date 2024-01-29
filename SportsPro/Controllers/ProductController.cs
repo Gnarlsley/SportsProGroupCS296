@@ -7,7 +7,6 @@ namespace SportsPro.Controllers
     public class ProductController : Controller
     {
         private readonly SportsProContext _context;
-        // GET: ProductController
         
         public ProductController(SportsProContext context)
         {
@@ -19,13 +18,11 @@ namespace SportsPro.Controllers
             return View(productsList);
         }
 
-        // GET: ProductController/Create
         public ActionResult Add()
         {
             return View();
         }
 
-        // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Add(IFormCollection collection)
@@ -39,8 +36,6 @@ namespace SportsPro.Controllers
                 return View();
             }
         }
-
-        // GET: ProductController/Edit/5
         public ActionResult Edit(int id)
         {
             var product = _context.Products.Find(id);
@@ -54,7 +49,6 @@ namespace SportsPro.Controllers
             }
         }
 
-        // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Product updatedProduct)
@@ -87,27 +81,25 @@ namespace SportsPro.Controllers
             }
         }
 
-        // GET: ProductController/Delete/5
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var obj = _context.Products.Find(id);
-            return View(obj);
+            var deleteProd = _context.Products.Find(id);
+            return View(deleteProd);
         }
 
-        // POST: ProductController/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var obj = _context.Products.Find(id);
+            var deleteProd = _context.Products.Find(id);
 
-            if (obj == null)
+            if (deleteProd == null)
             {
                 return NotFound();
             }
 
-           _context.Products.Remove(obj);
+           _context.Products.Remove(deleteProd);
             
             _context.SaveChanges();
 
