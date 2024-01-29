@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Views\Customer\" />
-    <Folder Include="Views\Incident\" />
     <Folder Include="Views\Registration\" />
   </ItemGroup>
 

@@ -1,47 +1,51 @@
-﻿@model IEnumerable<SportsPro.Models.Technician>
+﻿@model List<SportsPro.Models.Technician>
 
 @{
-    ViewData["Title"] = "List";
+    ViewBag.Title = "Technician Manager";
 }
 
-<h1>List</h1>
+<h1>@ViewBag.Title</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Email)
+                Email
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Phone)
+                Phone
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+        @foreach (var technician in Model.Where(i => i.TechnicianID != -1))
+        {
+            <tr>
+                <td>
+                    @technician.Name
+                </td>
+                <td>
+                    @technician.Email
+                </td>
+                <td>
+                    @technician.Phone
+                </td>
+
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phone)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.TechnicianID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.TechnicianID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.TechnicianID">Delete</a>
+                    <a asp-action="Edit" asp-route-id="@technician.TechnicianID" class="btn btn-primary">Edit</a>
+                    <a asp-action="Delete" asp-route-id="@technician.TechnicianID" class="btn btn-primary">Delete</a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+
+<p class="row">
+    <div class="align-items-center col-md-6">
+        <a asp-action="Create" class="btn btn-outline-primary">Add</a>
+    </div>
+</p>
