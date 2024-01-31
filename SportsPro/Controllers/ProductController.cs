@@ -18,9 +18,11 @@ namespace SportsPro.Controllers
             return View(productsList);
         }
 
+        [HttpGet]
         public ActionResult Add()
         {
-            return View();
+            ViewBag.Action = "Add";
+            return View("Edit", new Product());
         }
 
         [HttpPost]

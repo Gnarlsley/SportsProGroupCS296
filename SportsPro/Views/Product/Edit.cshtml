@@ -1,7 +1,8 @@
 ﻿@model Product
 
 @{
-    ViewBag.Title = "Edit Product";
+    string title = ViewBag.Action + " Product";
+    ViewBag.Title = title;
 }
 
 <h2>@ViewBag.Title</h2>
