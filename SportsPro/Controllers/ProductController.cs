@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
+using System;
+using System.Linq;
 
 namespace SportsPro.Controllers
 {
     public class ProductController : Controller
     {
         private readonly SportsProContext _context;
-        
+
         public ProductController(SportsProContext context)
         {
             _context = context;
         }
+
         public IActionResult List()
         {
             var productsList = _context.Products.ToList();
@@ -27,28 +30,43 @@ namespace SportsPro.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(IFormCollection collection)
+        public ActionResult Add(Product product)
         {
             try
             {
-                return RedirectToAction(nameof(List));
+                if (ModelState.IsValid)
+                {
+                    _context.Products.Add(product);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(List));
+                }
+
+                ViewBag.Action = "Add";
+                return View("Edit", product);
             }
             catch
             {
                 return View();
             }
         }
-        public ActionResult Edit(int id)
+
+        [HttpGet]
+        public ActionResult Edit(int? id)
         {
+            if (id == null)
+            {
+                ViewBag.Action = "Add";
+                return View(new Product());
+            }
+
             var product = _context.Products.Find(id);
             if (product == null)
             {
-                return View();
+                return NotFound();
             }
-            else
-            {
-                return View(product);
-            }
+
+            ViewBag.Action = "Edit";
+            return View(product);
         }
 
         [HttpPost]
@@ -69,6 +87,7 @@ namespace SportsPro.Controllers
                     return View();
                 }
 
+                product.ProductCode = updatedProduct.ProductCode;
                 product.Name = updatedProduct.Name;
                 product.YearlyPrice = updatedProduct.YearlyPrice;
                 product.ReleaseDate = updatedProduct.ReleaseDate;
@@ -101,8 +120,8 @@ namespace SportsPro.Controllers
                 return NotFound();
             }
 
-           _context.Products.Remove(deleteProd);
-            
+            _context.Products.Remove(deleteProd);
+
             _context.SaveChanges();
 
             return RedirectToAction("List");

@@ -1,14 +1,34 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿//Ethan Niehus Log Book: Anything that said new code is new code
+
+//New Code
+using System.ComponentModel.DataAnnotations;
+
+
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsPro.Models
 {
     public class Product
     {
-		public int ProductID { get; set; }
-		public string ProductCode { get; set; } = string.Empty;
-		public string Name { get; set; } = string.Empty;
-		[Column(TypeName = "decimal(8,2)")]
-		public decimal YearlyPrice { get; set; }
-		public DateTime ReleaseDate { get; set; } = DateTime.Now;
-	}
+        public int ProductID { get; set; }
+
+
+        //New Code
+        [Required(ErrorMessage = "Please enter a product code.")]
+        public string ProductCode { get; set; } = string.Empty;
+
+        //New Code
+        [Required(ErrorMessage = "Please enter a product name.")]
+        public string Name { get; set; } = string.Empty;
+
+        //New Code
+        [Required(ErrorMessage = "Please enter a yearly price.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "Yearly price must be greater than zero.")]
+
+        [Column(TypeName = "decimal(8,2)")]
+        public decimal YearlyPrice { get; set; }
+
+        public DateTime ReleaseDate { get; set; } = DateTime.Now;
+    }
 }
+
