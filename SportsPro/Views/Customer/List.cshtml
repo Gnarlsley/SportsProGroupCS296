@@ -1,4 +1,4 @@
-﻿@model List<SportsPro.Models.Customer>
+﻿@model List<Customer>
 
 @{
     ViewBag.Title = "Customer Manager";
@@ -10,10 +10,7 @@
     <thead>
         <tr>
             <th>
-                First Name
-            </th>
-            <th>
-                Last Name
+                Name
             </th>
             <th>
                 Email
@@ -21,37 +18,31 @@
             <th>
                 City
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var customer in Model.Where(i => i.CustomerID != -1))
-        {
-            <tr>
-                <td>
-                    @customer.FirstName
-                </td>
-                <td>
-                    @customer.LastName
-                </td>
-                <td>
-                    @customer.Email
-                </td>
-                <td>
-                    @customer.City
-                </td>
-
-                <td>
-                    <a asp-action="Edit" asp-route-id="@customer.CustomerID" class="btn btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@customer.CustomerID" class="btn btn-primary">Delete</a>
-                </td>
-            </tr>
-        }
+@foreach (var customer in Model) {
+        <tr>
+            <td>
+                @customer.FullName
+            </td>
+            <td>
+                @customer.Email
+            </td>
+            <td>
+                @customer.City
+            </td>
+            <td>
+                    <a asp-controller="Customer" asp-action="Edit" asp-route-id="@customer.CustomerID" class="btn btn-primary">Edit</a>
+                <a asp-action="Delete" asp-route-id="@customer.CustomerID" class="btn btn-primary">Delete</a>
+            </td>
+        </tr>
+}
     </tbody>
 </table>
 
 <p class="row">
     <div class="align-items-center col-md-6">
-        <a asp-action="Create" class="btn btn-outline-primary">Add</a>
+        <a asp-action="Add" class="btn btn-outline-primary">Add</a>
     </div>
 </p>

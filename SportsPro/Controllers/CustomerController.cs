@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SportsPro.Controllers
 {
@@ -14,130 +12,82 @@ namespace SportsPro.Controllers
         {
             _context = context;
         }
-
-        // GET: Customer
-        public async Task<IActionResult> List()
+        public IActionResult List()
         {
-            var customerList = await _context.Customers.ToListAsync();
-            return View(customerList);
+            var customersList = _context.Customers.ToList();
+            return View(customersList);
         }
 
-        // GET: Customer/Create
-        public IActionResult Create()
+        [HttpGet]
+        public ActionResult Add()
         {
-            return View();
+            ViewBag.Action = "Add";
+            return View("Edit", new Customer());
         }
 
-        // POST: Customer/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("FirstName,LastName,Address,City,State,PostalCode,Phone,Email,CountryID")] Customer customer)
+        [HttpGet]
+        public ActionResult Edit(int id)
         {
-            try
-            {
-                if (ModelState.IsValid)
-                {
-                    _context.Add(customer);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(List));
-                }
-            }
-            catch (DbUpdateException)
-            {
-                // Log the error (add a logger dependency)
-                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists, see your system administrator.");
-            }
-
-            return View(customer);
-        }
-
-        // GET: Customer/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context.Customers.FindAsync(id);
+            ViewBag.Action = "Edit";
+            var customer = _context.Customers.Find(id);
             if (customer == null)
             {
-                return NotFound();
+                return View();
             }
-
-            return View(customer);
+            else
+            {
+                return View(customer);
+            }
         }
 
-        // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("CustomerID,FirstName,LastName,Address,City,State,PostalCode,Phone,Email,CountryID")] Customer customer)
+        public ActionResult Edit(Customer customer)
         {
-            if (id != customer.CustomerID)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
-                try
+                if (customer.CustomerID == 0)
                 {
-                    _context.Update(customer);
-                    await _context.SaveChangesAsync();
+                    _context.Customers.Add(customer);
+                    _context.SaveChanges();
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!CustomerExists(customer.CustomerID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    _context.Customers.Update(customer);
+                    _context.SaveChanges();
                 }
-                return RedirectToAction(nameof(List));
+                return RedirectToAction("List");
             }
-            return View(customer);
+            else
+            {
+                ViewBag.Action = (customer.CustomerID == 0) ? "Add" : "Edit";
+                return View(customer);
+            }
         }
 
-        // GET: Customer/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        [HttpGet]
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customer = await _context.Customers
-                .FirstOrDefaultAsync(m => m.CustomerID == id);
-            if (customer == null)
-            {
-                return NotFound();
-            }
-
-            return View(customer);
+            var deleteProd = _context.Customers.Find(id);
+            return View(deleteProd);
         }
 
-        // POST: Customer/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-            if (customer == null)
+            var deleteCust = _context.Customers.Find(id);
+
+            if (deleteCust == null)
             {
                 return NotFound();
             }
 
-            _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(List));
-        }
+            _context.Customers.Remove(deleteCust);
 
-        private bool CustomerExists(int id)
-        {
-            return _context.Customers.Any(e => e.CustomerID == id);
+            _context.SaveChanges();
+
+            return RedirectToAction("List");
         }
     }
 }
