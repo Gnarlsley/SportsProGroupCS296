@@ -25,21 +25,10 @@ namespace SportsPro.Controllers
             return View("Edit", new Product());
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Add(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(List));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        [HttpGet]
         public ActionResult Edit(int id)
         {
+            ViewBag.Action = "Edit";
             var product = _context.Products.Find(id);
             if (product == null)
             {
@@ -53,33 +42,26 @@ namespace SportsPro.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Product updatedProduct)
+        public ActionResult Edit(Product product)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
+                if (product.ProductID == 0)
                 {
-                    return View(updatedProduct);
+                    _context.Products.Add(product);
+                    _context.SaveChanges();
                 }
-
-                var product = _context.Products.Find(id);
-
-                if (product == null)
+                else
                 {
-                    return View();
+                    _context.Products.Update(product);
+                    _context.SaveChanges();
                 }
-
-                product.Name = updatedProduct.Name;
-                product.YearlyPrice = updatedProduct.YearlyPrice;
-                product.ReleaseDate = updatedProduct.ReleaseDate;
-
-                _context.SaveChanges();
-
-                return RedirectToAction(nameof(List));
+                return RedirectToAction("List");
             }
-            catch
+            else
             {
-                return View();
+                ViewBag.Action = (product.ProductID == 0) ? "Add" : "Edit";
+                return View(product);
             }
         }
 
