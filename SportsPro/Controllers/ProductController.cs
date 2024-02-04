@@ -86,10 +86,6 @@ namespace SportsPro.Controllers
                     _context.SaveChanges();
                 }
 
-                
-
-                _context.SaveChanges();
-
                 return RedirectToAction(nameof(List));
             }
             else

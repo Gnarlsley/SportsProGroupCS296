@@ -25,19 +25,45 @@ namespace SportsPro.Controllers
             return View("Edit", new Technician());
         }
 
-        [HttpGet]
-        public ActionResult Edit(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Add(Technician technician)
         {
-            ViewBag.Action = "Edit";
-            var technician = _context.Technicians.Find(id);
-            if (technician == null)
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Technicians.Add(technician);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(List));
+                }
+
+                ViewBag.Action = "Add";
+                return View("Edit", technician);
+            }
+            catch
             {
                 return View();
             }
-            else
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
             {
-                return View(technician);
+                ViewBag.Action = "Add";
+                return View(new Technician());
             }
+
+            var technician = _context.Technicians.Find(id);
+            if (technician == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Action = "Edit";
+            return View(technician);
         }
 
         [HttpPost]
@@ -56,7 +82,7 @@ namespace SportsPro.Controllers
                     _context.Technicians.Update(technician);
                     _context.SaveChanges();
                 }
-                return RedirectToAction("List");
+                return RedirectToAction(nameof(List));
             }
             else
             {

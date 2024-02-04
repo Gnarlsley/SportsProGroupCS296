@@ -6,7 +6,7 @@
 
 <h1>@ViewBag.Title</h1>
 
-<table class="table">
+<table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>
@@ -36,8 +36,10 @@
                 </td>
 
             <td>
-                    <a asp-action="Edit" asp-route-id="@technician.TechnicianID" class="btn btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@technician.TechnicianID" class="btn btn-primary">Delete</a>
+                <a asp-action="Edit" asp-route-id="@technician.TechnicianID" class="btn btn-primary">Edit</a>
+            </td>
+            <td>
+                <a asp-action="Delete" asp-route-id="@technician.TechnicianID" class="btn btn-primary">Delete</a>
             </td>
         </tr>
 }
@@ -46,6 +48,6 @@
 
 <p class="row">
     <div class="align-items-center col-md-6">
-        <a asp-action="Add" class="btn btn-outline-primary">Add</a>
+        <a asp-action="Add" class="btn btn-primary">Add Technician</a>
     </div>
 </p>
