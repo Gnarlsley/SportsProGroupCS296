@@ -86,10 +86,7 @@ namespace SportsPro.Controllers
                     _context.SaveChanges();
                 }
 
-                product.ProductCode = updatedProduct.ProductCode;
-                product.Name = updatedProduct.Name;
-                product.YearlyPrice = updatedProduct.YearlyPrice;
-                product.ReleaseDate = updatedProduct.ReleaseDate;
+                
 
                 _context.SaveChanges();
 
