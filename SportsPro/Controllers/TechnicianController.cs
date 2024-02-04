@@ -12,37 +12,23 @@ namespace SportsPro.Controllers
         {
             _context = context;
         }
-        // GET: TechnicianController
-        public ActionResult List()
+        public IActionResult List()
         {
-            var technicianList = _context.Technicians.ToList();
-            return View(technicianList);
+            var productsList = _context.Technicians.ToList();
+            return View(productsList);
         }
 
-        // GET: TechnicianController/Create
-        public ActionResult Create()
+        [HttpGet]
+        public ActionResult Add()
         {
-            return View();
+            ViewBag.Action = "Add";
+            return View("Edit", new Technician());
         }
 
-        // POST: TechnicianController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: TechnicianController/Edit/5
+        [HttpGet]
         public ActionResult Edit(int id)
         {
+            ViewBag.Action = "Edit";
             var technician = _context.Technicians.Find(id);
             if (technician == null)
             {
@@ -54,59 +40,50 @@ namespace SportsPro.Controllers
             }
         }
 
-        // POST: TechnicianController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Technician updatedTechnician)
+        public ActionResult Edit(Technician technician)
         {
-            try
+            if (ModelState.IsValid)
             {
-                if (!ModelState.IsValid)
+                if (technician.TechnicianID == 0)
                 {
-                    return View(updatedTechnician);
+                    _context.Technicians.Add(technician);
+                    _context.SaveChanges();
                 }
-
-                var technician = _context.Technicians.Find(id);
-
-                if (technician == null)
+                else
                 {
-                    return View();
+                    _context.Technicians.Update(technician);
+                    _context.SaveChanges();
                 }
-
-                technician.Name = updatedTechnician.Name;
-                technician.Email = updatedTechnician.Email;
-                technician.Phone = updatedTechnician.Phone;
-
-                _context.SaveChanges();
-
-                return RedirectToAction(nameof(List));
+                return RedirectToAction("List");
             }
-            catch
+            else
             {
-                return View();
+                ViewBag.Action = (technician.TechnicianID == 0) ? "Add" : "Edit";
+                return View(technician);
             }
         }
 
         [HttpGet]
         public ActionResult Delete(int id)
         {
-            var deleteTech = _context.Technicians.Find(id);
-            return View(deleteTech);
+            var deleteProd = _context.Technicians.Find(id);
+            return View(deleteProd);
         }
-
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var deleteTech = _context.Technicians.Find(id);
+            var deleteProd = _context.Technicians.Find(id);
 
-            if (deleteTech == null)
+            if (deleteProd == null)
             {
                 return NotFound();
             }
 
-            _context.Technicians.Remove(deleteTech);
+            _context.Technicians.Remove(deleteProd);
 
             _context.SaveChanges();
 
