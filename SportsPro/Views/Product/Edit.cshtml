@@ -7,35 +7,40 @@
 
 <h2>@ViewBag.Title</h2>
 
-<form asp-action="@ViewBag.Action" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
 
-    @if (ViewBag.Action == "Edit")
-    {
-        <div class="form-group">
-            <label asp-for="ProductID">ID</label>
-            <input asp-for="ProductID" class="form-control" readonly>
-        </div>
-    }
+<form asp-action="Edit" method="post">
+    
+<!-- **FOR DEBUGGING
+    <div class="form-group">
+        <label asp-for="ProductID">ID</label>
+        <input asp-for="ProductID" class="form-control" readonly>
+    </div>
+    -->
+    <span asp-validation-for="ProductCode" class="text-danger"></span>
 
     <div class="form-group">
         <label asp-for="ProductCode">Code</label>
         <input asp-for="ProductCode" class="form-control">
     </div>
 
+    <span asp-validation-for="Name" class="text-danger"></span>
     <div class="form-group">
         <label asp-for="Name">Name</label>
         <input asp-for="Name" class="form-control">
     </div>
 
+    <span asp-validation-for="YearlyPrice" class="text-danger"></span>
     <div class="form-group">
         <label asp-for="YearlyPrice">Price</label>
         <input asp-for="YearlyPrice" class="form-control">
     </div>
 
+    <span asp-validation-for="ReleaseDate" class="text-danger"></span>
     <div class="form-group">
-        <label asp-for="ReleaseDate">Release Date</label>
-        <input asp-for="ReleaseDate" class="form-control">
+
+        <label asp-for="ReleaseDate">Realease Date</label>
+        <input asp-for="ReleaseDate" class="form-control" value="@Model.ReleaseDate.ToString("yyyy-MM-dd HH:mm:ss")">
+
     </div>
 
     <div class="mt-2">
