@@ -1,17 +1,20 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SportsPro.Models;
+using System;
+using System.Linq;
 
 namespace SportsPro.Controllers
 {
     public class ProductController : Controller
     {
         private readonly SportsProContext _context;
-        
+
         public ProductController(SportsProContext context)
         {
             _context = context;
         }
+
         public IActionResult List()
         {
             var productsList = _context.Products.ToList();
@@ -25,19 +28,45 @@ namespace SportsPro.Controllers
             return View("Edit", new Product());
         }
 
-        [HttpGet]
-        public ActionResult Edit(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Add(Product product)
         {
-            ViewBag.Action = "Edit";
-            var product = _context.Products.Find(id);
-            if (product == null)
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _context.Products.Add(product);
+                    _context.SaveChanges();
+                    return RedirectToAction(nameof(List));
+                }
+
+                ViewBag.Action = "Add";
+                return View("Edit", product);
+            }
+            catch
             {
                 return View();
             }
-            else
+        }
+
+        [HttpGet]
+        public ActionResult Edit(int? id)
+        {
+            if (id == null)
             {
-                return View(product);
+                ViewBag.Action = "Add";
+                return View(new Product());
             }
+
+            var product = _context.Products.Find(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.Action = "Edit";
+            return View(product);
         }
 
         [HttpPost]
@@ -56,7 +85,15 @@ namespace SportsPro.Controllers
                     _context.Products.Update(product);
                     _context.SaveChanges();
                 }
-                return RedirectToAction("List");
+
+                product.ProductCode = updatedProduct.ProductCode;
+                product.Name = updatedProduct.Name;
+                product.YearlyPrice = updatedProduct.YearlyPrice;
+                product.ReleaseDate = updatedProduct.ReleaseDate;
+
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(List));
             }
             else
             {
@@ -83,8 +120,8 @@ namespace SportsPro.Controllers
                 return NotFound();
             }
 
-           _context.Products.Remove(deleteProd);
-            
+            _context.Products.Remove(deleteProd);
+
             _context.SaveChanges();
 
             return RedirectToAction("List");

@@ -1,4 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
+
+﻿//Ethan Niehus Log Book: Anything that said new code is new code
+
+//New Code
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SportsPro.Models
@@ -26,3 +30,4 @@ namespace SportsPro.Models
         public DateTime ReleaseDate { get; set; } = DateTime.Now;
     }
 }
+
